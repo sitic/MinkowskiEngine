@@ -298,6 +298,9 @@ if "MAX_JOBS" not in os.environ and os.cpu_count() > MAX_COMPILATION_THREADS:
     # Clip the num compilation thread to 8
     os.environ["MAX_JOBS"] = str(MAX_COMPILATION_THREADS)
 
+CC_FLAGS += ['-DGLOG_USE_GLOG_EXPORT']
+NVCC_FLAGS += ['-DGLOG_USE_GLOG_EXPORT']
+
 target = "cpu" if CPU_ONLY else "gpu"
 
 Extension = SOURCE_SETS[target][0]
