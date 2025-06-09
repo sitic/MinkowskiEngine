@@ -145,10 +145,9 @@ class concurrent_unordered_map {
   /**
    * @brief Factory to construct a new concurrent unordered map.
    *
-   * Returns a `std::unique_ptr` to a new concurrent unordered map object. The
+   * Returns a `std::shared_ptr` to a new concurrent unordered map object. The
    * map is non-owning and trivially copyable and should be passed by value into
-   * kernels. The `unique_ptr` contains a custom deleter that will free the
-   * map's contents.
+   * kernels.
    *
    * @note The implementation of this unordered_map uses sentinel values to
    * indicate an entry in the hash table that is empty, i.e., if a hash bucket
@@ -185,7 +184,7 @@ class concurrent_unordered_map {
     // due to compiler bug: https://github.com/rapidsai/cudf/pull/5692
     auto deleter = [stream](Self* p) { (*p).destroy(stream); };
 
-    return std::unique_ptr<Self, std::function<void(Self*)>>{
+    return std::shared_ptr<Self>{
       new Self(capacity, unused_element, unused_key, hash_function, equal, allocator, stream),
       deleter};
   }
