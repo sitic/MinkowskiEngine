@@ -120,7 +120,7 @@ def _argparse(pattern, argv, is_flag=True, is_list=False):
 
 
 run_command("rm", "-rf", "build")
-run_command("pip", "uninstall", "MinkowskiEngine", "-y")
+run_command(sys.executable, "-m", "pip", "uninstall", "MinkowskiEngine", "-y")
 
 # For cpu only build
 CPU_ONLY, argv = _argparse("--cpu_only", argv)
@@ -298,8 +298,8 @@ if "MAX_JOBS" not in os.environ and os.cpu_count() > MAX_COMPILATION_THREADS:
     # Clip the num compilation thread to 8
     os.environ["MAX_JOBS"] = str(MAX_COMPILATION_THREADS)
 
-CC_FLAGS += ['-DGLOG_USE_GLOG_EXPORT']
-NVCC_FLAGS += ['-DGLOG_USE_GLOG_EXPORT']
+CC_FLAGS += ['-DGLOG_USE_GLOG_EXPORT', '-DNVTX_DISABLE=1']
+NVCC_FLAGS += ['-DGLOG_USE_GLOG_EXPORT', '-DNVTX_DISABLE=1']
 
 target = "cpu" if CPU_ONLY else "gpu"
 
